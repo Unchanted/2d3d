@@ -188,3 +188,77 @@
     }
   }
 
+  // rows pattern
+  document.querySelector('.patterns__rows').addEventListener('click', event => {
+    event.preventDefault();
+    rowsPattern();
+    targetOrb();
+  });
+
+  function rowsPattern(rows = 10) {
+    const xSpacing = orbWidth * 0.75;
+    const ySpacing = orbHeight * 1.75;
+    for (let i = 0; i < orbTotal; i++) {
+      orbs[i].ix = xSpacing * (i % rows);
+      orbs[i].iy = ySpacing * Math.floor(i / rows);
+    }
+  }
+
+  // zigzag pattern
+  document.querySelector('.patterns__zigzag').addEventListener('click', event => {
+    event.preventDefault();
+    zigzagPattern();
+    targetOrb();
+  });
+
+  function zigzagPattern(rows = 5) {
+    const xSpacing = orbWidth * 0.5;
+    const ySpacing = orbHeight * 0.2;
+    let zigzag = 1;
+    for (let i = 0; i < orbTotal; i++) {
+      const remainder = i % rows;
+      zigzag = remainder === 0 ? -zigzag : zigzag;
+      const xOffset = zigzag === 1 ? rows * xSpacing : 0;
+      orbs[i].ix = (xSpacing * remainder * zigzag) - xOffset;
+      orbs[i].iy = ySpacing * i;
+    }
+  }
+
+  // wave and spiral patterns
+  document.querySelector('.patterns__wave').addEventListener('click', event => {
+    event.preventDefault();
+    circularPattern(undefined, undefined, 'wave');
+    targetOrb();
+  });
+
+  document.querySelector('.patterns__spiral').addEventListener('click', event => {
+    event.preventDefault();
+    circularPattern();
+    targetOrb();
+  });
+
+  function circularPattern(radius = 1200, spacing = 60, type = 'spiral') {
+    const degrees = 360;
+    for (let i = 0; i < orbTotal; i++) {
+      const degree = i * spacing;
+      const angle = degree / degrees;
+      if (type === 'spiral') {
+        orbs[i].ix = Math.sin(angle) * radius;
+        orbs[i].iy = Math.cos(angle) * radius;
+      } else if (type == 'wave') {
+        orbs[i].ix = Math.sin(angle) * radius;
+        orbs[i].iy = Math.sin(angle) * radius;
+      }
+    }
+  }
+
+  // helper functions
+  function getRandomRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getRandomHexColor() {
+    return '#' + (Math.random().toString(16) + '0000000').slice(2,8);
+  }
+
+}();
